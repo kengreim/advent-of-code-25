@@ -49,6 +49,18 @@ where
             println!("Part 2: {res}");
             println!("{:#?}", duration);
         }
+        "both" => {
+            let start = Instant::now();
+            let res = part_1_fn(input);
+            let duration = start.elapsed();
+            println!("Part 1: {res}");
+            println!("{:#?}", duration);
+            let start = Instant::now();
+            let res = part_2_fn(input);
+            let duration = start.elapsed();
+            println!("Part 2: {res}");
+            println!("{:#?}", duration);
+        }
         _ => eprintln!("{part} is not a valid arg for part"),
     }
 }
