@@ -32,28 +32,24 @@ fn part1() {
 fn part2() {
     let start = Instant::now();
     let input = include_str!("input.txt");
-    let ranges = input
-        .split(',')
-        .map(|r| IdRange::from(r))
-        .collect::<Vec<_>>();
+    let ranges = input.split(',').map(IdRange::from);
+    let mut count = 0;
 
-    let mut repeats = HashSet::new();
     for range in ranges {
         for i in range.start..=range.end {
             let i_str = i.to_string();
-            let len = i_str.len();
-
-            let repeat_lengths = (1..=(len / 2)).filter(|j| len % j == 0);
+            let i_len = i_str.len();
+            let repeat_lengths = (1..=(i_len / 2)).filter(|j| i_len % j == 0);
             for repeat_len in repeat_lengths {
-                let len_u64 = repeat_len as usize;
-                let repeated = i_str[0..len_u64].repeat(len / len_u64);
+                let repeated = i_str[0..repeat_len].repeat(i_len / repeat_len);
                 if repeated == i_str {
-                    repeats.insert(i);
+                    count += i;
+                    break;
                 }
             }
         }
     }
-    println!("Part 2 result: {}", repeats.iter().sum::<i64>());
+    println!("Part 2 result: {}", count);
     println!("Part 2 time: {}", start.elapsed().as_millis());
 }
 
