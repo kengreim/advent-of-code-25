@@ -37,29 +37,15 @@ fn part2() {
         .map(|r| IdRange::from(r))
         .collect::<Vec<_>>();
 
-    let mut repeat_lengths: HashMap<usize, Vec<i64>> = HashMap::new();
-    for i in 1usize..21 {
-        let valid_repeats = (1..=(i as i64 / 2))
-            .rev()
-            .filter(|j| i as i64 % j == 0)
-            .collect();
-        repeat_lengths.insert(i, valid_repeats);
-    }
-
     let mut repeats = HashSet::new();
     for range in ranges {
         for i in range.start..=range.end {
             let i_str = i.to_string();
             let len = i_str.len();
 
-            let repeat_lengths = if let Some(lengths) = repeat_lengths.get(&i_str.len()) {
-                lengths
-            } else {
-                println!("error trying to get lengths from {i_str}");
-                panic!();
-            };
+            let repeat_lengths = (1..=(len / 2)).filter(|j| len % j == 0);
             for repeat_len in repeat_lengths {
-                let len_u64 = *repeat_len as usize;
+                let len_u64 = repeat_len as usize;
                 let repeated = i_str[0..len_u64].repeat(len / len_u64);
                 if repeated == i_str {
                     repeats.insert(i);
