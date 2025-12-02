@@ -1,13 +1,15 @@
+use shared::run_day_with_args;
 use crate::Direction::{Left, Right};
 
 fn main() {
-    part1();
-    part2();
-    part2_bruteforce();
+    run_day_with_args(part1, part2);
+    // part1();
+    // part2();
+    // part2_bruteforce();
     // compare_turn_dial_fns();
 }
 
-fn part1() {
+fn part1() -> i32 {
     let input = include_str!("input.txt");
     let mut position = 50;
     let mut num_0 = 0;
@@ -28,10 +30,10 @@ fn part1() {
         }
     }
 
-    println!("Part 1: {}", num_0);
+    num_0
 }
 
-fn part2() {
+fn part2() -> i32 {
     let input = include_str!("input.txt");
     let mut position = 50;
     let mut num_0_clicks = 0;
@@ -55,10 +57,11 @@ fn part2() {
             }
         }
     }
-    println!("Part 2: {}", num_0_clicks);
+
+    num_0_clicks
 }
 
-fn part2_bruteforce() {
+fn part2_bruteforce() -> i32 {
     let input = include_str!("input.txt");
     let mut position = 50;
     let mut num_0_clicks = 0;
@@ -72,7 +75,7 @@ fn part2_bruteforce() {
             }
         }
     }
-    println!("Part 2: {}", num_0_clicks);
+    num_0_clicks
 }
 
 #[derive(Clone, Copy, Debug)]

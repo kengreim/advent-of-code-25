@@ -1,11 +1,10 @@
-use std::collections::{HashMap, HashSet};
-use std::time::Instant;
+use shared::run_day_with_args;
 
 fn main() {
-    part2();
+    run_day_with_args(part1, part2);
 }
 
-fn part1() {
+fn part1() -> i64 {
     let input = include_str!("input.txt");
     let ranges = input
         .split(',')
@@ -26,11 +25,11 @@ fn part1() {
             }
         }
     }
-    println!("Part 1 result: {}", count);
+
+    count
 }
 
-fn part2() {
-    let start = Instant::now();
+fn part2() -> i64 {
     let input = include_str!("input.txt");
     let ranges = input.split(',').map(IdRange::from);
     let mut count = 0;
@@ -49,8 +48,8 @@ fn part2() {
             }
         }
     }
-    println!("Part 2 result: {}", count);
-    println!("Part 2 time: {}", start.elapsed().as_millis());
+
+    count
 }
 
 struct IdRange {
