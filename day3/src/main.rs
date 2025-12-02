@@ -1,11 +1,13 @@
-use shared::run_day_with_args;
+use shared::{Inputs, run_day_with_args};
 
 fn main() {
     run_day_with_args(
         part1,
         part2,
-        include_str!("input.txt"),
-        include_str!("input_test.txt"),
+        Inputs {
+            test: include_str!("input_test.txt"),
+            full: include_str!("input.txt"),
+        },
     );
 }
 
