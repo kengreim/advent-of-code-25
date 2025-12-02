@@ -2,9 +2,12 @@ use regex::Regex;
 use shared::run_day_with_args;
 
 fn main() {
-    let full_input = include_str!("input.txt");
-    let test_input = include_str!("input_test.txt");
-    run_day_with_args(part1, part2, test_input, full_input);
+    run_day_with_args(
+        part1,
+        part2,
+        include_str!("input.txt"),
+        include_str!("input_test.txt"),
+    );
 }
 
 fn part1(input: &str) -> i64 {
