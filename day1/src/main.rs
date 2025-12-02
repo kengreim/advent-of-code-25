@@ -1,16 +1,13 @@
-use shared::run_day_with_args;
 use crate::Direction::{Left, Right};
+use shared::run_day_with_args;
 
 fn main() {
-    run_day_with_args(part1, part2);
-    // part1();
-    // part2();
-    // part2_bruteforce();
-    // compare_turn_dial_fns();
+    let full_input = include_str!("input.txt");
+    let test_input = include_str!("input_test.txt");
+    run_day_with_args(part1, part2, test_input, full_input);
 }
 
-fn part1() -> i32 {
-    let input = include_str!("input.txt");
+fn part1(input: &str) -> i32 {
     let mut position = 50;
     let mut num_0 = 0;
     for line in input.lines() {
@@ -33,8 +30,7 @@ fn part1() -> i32 {
     num_0
 }
 
-fn part2() -> i32 {
-    let input = include_str!("input.txt");
+fn part2(input: &str)  -> i32 {
     let mut position = 50;
     let mut num_0_clicks = 0;
     for line in input.lines() {

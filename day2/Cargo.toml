@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 shared = {path = "../shared"}
+regex = "1.12.2"

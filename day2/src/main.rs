@@ -1,11 +1,13 @@
+use regex::Regex;
 use shared::run_day_with_args;
 
 fn main() {
-    run_day_with_args(part1, part2);
+    let full_input = include_str!("input.txt");
+    let test_input = include_str!("input_test.txt");
+    run_day_with_args(part1, part2, test_input, full_input);
 }
 
-fn part1() -> i64 {
-    let input = include_str!("input.txt");
+fn part1(input: &str) -> i64 {
     let ranges = input
         .split(',')
         .map(|r| IdRange::from(r))
@@ -29,8 +31,7 @@ fn part1() -> i64 {
     count
 }
 
-fn part2() -> i64 {
-    let input = include_str!("input.txt");
+fn part2(input: &str) -> i64 {
     let ranges = input.split(',').map(IdRange::from);
     let mut count = 0;
 
@@ -42,6 +43,29 @@ fn part2() -> i64 {
             for repeat_len in repeat_lengths {
                 let repeated = i_str[0..repeat_len].repeat(i_len / repeat_len);
                 if repeated == i_str {
+                    count += i;
+                    break;
+                }
+            }
+        }
+    }
+
+    count
+}
+
+fn part2_regex() -> i64 {
+    let input = include_str!("input.txt");
+    let ranges = input.split(',').map(IdRange::from);
+    let mut count = 0;
+
+    for range in ranges {
+        for i in range.start..=range.end {
+            let i_str = i.to_string();
+            let i_len = i_str.len();
+            let repeat_lengths = (1..=(i_len / 2)).filter(|j| i_len % j == 0);
+            for repeat_len in repeat_lengths {
+                let re = Regex::new(format!("^({})+$", &i_str[0..repeat_len]).as_str()).unwrap();
+                if re.is_match(&i_str) {
                     count += i;
                     break;
                 }
