@@ -33,7 +33,7 @@ pub fn run_day_with_args<T1, F1, T2, F2>(
         }
     };
 
-    match part.as_str() {
+    match part.to_ascii_lowercase().as_str() {
         "part1" => {
             let start = Instant::now();
             let res = part_1_fn(input);
