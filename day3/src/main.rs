@@ -92,7 +92,7 @@ fn find_leftmost_max_digit(line: &str, limit: usize) -> ((u32, usize), &str) {
         &line[pos+1..line.len()]
     };
 
-    ((c.to_digit(10).unwrap(), pos), remainder_str);
+    ((c.to_digit(10).unwrap(), pos), remainder_str)
 }
 
 // fn test()
