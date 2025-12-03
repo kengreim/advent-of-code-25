@@ -28,7 +28,7 @@ fn part1(input: &str) -> u32 {
         let (remainder_str, val1_first) = if pos == line.len() - 1 {
             (&line[0..line.len() - 1], false)
         } else {
-            (&line[pos+1..line.len()], true)
+            (&line[pos + 1..line.len()], true)
         };
 
         let val2 = remainder_str
@@ -59,7 +59,7 @@ fn part2(input: &str) -> u128 {
         let mut current_str = line;
         let mut idx = 0;
         while limit > 0 {
-            let ((max, pos), next_str) = find_leftmost_max_digit(current_str, limit);
+            let ((max, pos), next_str) = find_leftmost_max_digit2(current_str, limit);
             idx += pos;
             current_str = next_str;
             limit -= 1;
@@ -76,7 +76,7 @@ fn part2(input: &str) -> u128 {
 }
 
 fn find_leftmost_max_digit(line: &str, limit: usize) -> ((u32, usize), &str) {
-    let shortened_by_limit = &line[0..=line.len()-limit];
+    let shortened_by_limit = &line[0..=line.len() - limit];
     let (pos_from_end, c) = shortened_by_limit
         .chars()
         .rev()
@@ -86,13 +86,30 @@ fn find_leftmost_max_digit(line: &str, limit: usize) -> ((u32, usize), &str) {
 
     let pos = line.len() - limit - pos_from_end;
 
-    let remainder_str= if pos == line.len() - 1 {
+    let remainder_str = if pos == line.len() - 1 {
         &line[0..line.len() - 1]
     } else {
-        &line[pos+1..line.len()]
+        &line[pos + 1..line.len()]
     };
 
     ((c.to_digit(10).unwrap(), pos), remainder_str)
+}
+
+fn find_leftmost_max_digit2(line: &str, limit: usize) -> ((u32, usize), &str) {
+    let shortened_by_limit = &line[0..=line.len() - limit];
+    let (max, max_pos) = shortened_by_limit
+        .char_indices()
+        .fold((0, 0), |(max, max_pos), (pos, char)| {
+            if let Some(c) = char.to_digit(10)
+                && c > max
+            {
+                (c, pos)
+            } else {
+                (max, max_pos)
+            }
+        });
+    
+    ((max, max_pos), &line[max_pos + 1..line.len()])
 }
 
 // fn test()
