@@ -3,7 +3,7 @@ use shared::{Inputs, run_day_with_args};
 fn main() {
     run_day_with_args(
         part1,
-        part2,
+        part2_fold,
         Inputs {
             test: include_str!("input_test.txt"),
             full: include_str!("input.txt"),
@@ -59,7 +59,7 @@ fn part2(input: &str) -> u128 {
         let mut current_str = line;
         let mut idx = 0;
         while limit > 0 {
-            let ((max, pos), next_str) = find_leftmost_max_digit2(current_str, limit);
+            let ((max, pos), next_str) = find_leftmost_max_digit(current_str, limit);
             idx += pos;
             current_str = next_str;
             limit -= 1;
@@ -73,6 +73,36 @@ fn part2(input: &str) -> u128 {
     }
 
     sum
+}
+
+fn part2_fold(input: &str) -> u128 {
+    input.lines().fold(0, |sum, line| {
+        sum + (1..=12)
+            .rev()
+            .fold((0u128, 0usize), |(line_sum, idx), limit| {
+                let (max, pos) = find_leftmost_max_digit_fold(line, idx, limit);
+                (
+                    line_sum + max as u128 * 10_u128.pow(limit as u32 - 1),
+                    pos + 1,
+                )
+            })
+            .0
+    })
+}
+
+fn find_leftmost_max_digit_fold(line: &str, start_idx: usize, limit: usize) -> (u32, usize) {
+    line[start_idx..=line.len() - limit].char_indices().fold(
+        (0, 0),
+        |(max, max_pos), (pos, char)| {
+            if let Some(c) = char.to_digit(10)
+                && c > max
+            {
+                (c, pos + start_idx)
+            } else {
+                (max, max_pos)
+            }
+        },
+    )
 }
 
 fn find_leftmost_max_digit(line: &str, limit: usize) -> ((u32, usize), &str) {
@@ -93,23 +123,6 @@ fn find_leftmost_max_digit(line: &str, limit: usize) -> ((u32, usize), &str) {
     };
 
     ((c.to_digit(10).unwrap(), pos), remainder_str)
-}
-
-fn find_leftmost_max_digit2(line: &str, limit: usize) -> ((u32, usize), &str) {
-    let shortened_by_limit = &line[0..=line.len() - limit];
-    let (max, max_pos) = shortened_by_limit
-        .char_indices()
-        .fold((0, 0), |(max, max_pos), (pos, char)| {
-            if let Some(c) = char.to_digit(10)
-                && c > max
-            {
-                (c, pos)
-            } else {
-                (max, max_pos)
-            }
-        });
-    
-    ((max, max_pos), &line[max_pos + 1..line.len()])
 }
 
 // fn test()
