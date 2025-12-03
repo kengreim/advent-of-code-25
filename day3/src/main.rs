@@ -77,7 +77,7 @@ fn part2(input: &str) -> u128 {
 
 fn find_leftmost_max_digit(line: &str, limit: usize) -> ((u32, usize), &str) {
     let shortened_by_limit = &line[0..=line.len()-limit];
-    let (pos_from_end, c) = line[0..=line.len()-limit]
+    let (pos_from_end, c) = shortened_by_limit
         .chars()
         .rev()
         .enumerate()
