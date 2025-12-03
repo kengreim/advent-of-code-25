@@ -9,12 +9,121 @@ fn main() {
             full: include_str!("input.txt"),
         },
     );
+
+    //test()
 }
 
-fn part1(input: &str) -> &'static str {
-    "todo"
+fn part1(input: &str) -> u32 {
+    let lines = input.lines();
+    let mut count = 0;
+    for line in lines {
+        let (pos_from_end, val1) = line
+            .chars()
+            .rev()
+            .enumerate()
+            .max_by_key(|(_, c)| c.to_digit(10).unwrap())
+            .unwrap();
+        let pos = line.len() - 1 - pos_from_end;
+
+        let (remainder_str, val1_first) = if pos == line.len() - 1 {
+            (&line[0..line.len() - 1], false)
+        } else {
+            (&line[pos+1..line.len()], true)
+        };
+
+        let val2 = remainder_str
+            .chars()
+            .max_by_key(|c| c.to_digit(10).unwrap())
+            .unwrap()
+            .to_digit(10)
+            .unwrap();
+
+        let sum = if val1_first {
+            val1.to_digit(10).unwrap() * 10 + val2
+        } else {
+            val2 * 10 + val1.to_digit(10).unwrap()
+        };
+
+        count += sum;
+    }
+
+    count
 }
 
-fn part2(input: &str) -> &'static str {
-    "todo"
+fn part2(input: &str) -> u128 {
+    let lines = input.lines();
+    let mut sum: u128 = 0;
+    for line in lines {
+        let mut vals = Vec::new();
+        let mut limit = 12;
+        let mut current_str = line;
+        let mut idx = 0;
+        while limit > 0 {
+            let ((max, pos), next_str) = find_leftmost_max_digit(current_str, limit);
+            idx += pos;
+            current_str = next_str;
+            limit -= 1;
+            vals.push((max, idx));
+            idx += 1;
+        }
+
+        for (exp, (val, _)) in vals.iter().rev().enumerate() {
+            sum += (*val as u128) * 10_u128.pow(exp as u32);
+        }
+    }
+
+    sum
 }
+
+fn find_leftmost_max_digit(line: &str, limit: usize) -> ((u32, usize), &str) {
+    let shortened_by_limit = &line[0..=line.len()-limit];
+    let (pos_from_end, c) = line[0..=line.len()-limit]
+        .chars()
+        .rev()
+        .enumerate()
+        .max_by_key(|(_, c)| c.to_digit(10).unwrap())
+        .unwrap();
+
+    let pos = line.len() - limit - pos_from_end;
+
+    let remainder_str= if pos == line.len() - 1 {
+        &line[0..line.len() - 1]
+    } else {
+        &line[pos+1..line.len()]
+    };
+
+    ((c.to_digit(10).unwrap(), pos), remainder_str);
+}
+
+// fn test()
+// {
+//     let line = "1113233522332432321212222313412315521343627282223261232234221222322442422324222532621323222434113195";
+//     println!("{line}");
+//     println!("{}", line.len());
+//     let mut sum: u128 = 0;
+//     let mut vals = Vec::new();
+//     let mut limit = 12;
+//     let mut current_str = line;
+//     let mut idx = 0;
+//     while limit > 0 {
+//         let ((max, pos), next_str) = find_leftmost_max_digit(current_str, limit);
+//         idx += pos;
+//         current_str = next_str;
+//         limit -= 1;
+//         println!("{} {} {}", max, idx, next_str);
+//         vals.push((max, idx));
+//         idx += 1;
+//
+//         //assert_eq!(line.as_bytes()[idx].to_ascii_lowercase() as u32, max);
+//     }
+//
+//     vals.sort_unstable_by_key(|(val, pos)| *pos);
+//     println!("{vals:?}");
+//
+//     let mut line_sum = 0;
+//     for (exp, (val, _)) in vals.iter().rev().enumerate() {
+//         sum += (*val as u128) * 10_u128.pow(exp as u32);
+//         line_sum += (*val as u64) * 10_u64.pow(exp as u32);
+//     }
+//     println!("{line_sum}");
+// }
