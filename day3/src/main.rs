@@ -1,3 +1,5 @@
+use itertools::FoldWhile::{Continue, Done};
+use itertools::Itertools;
 use shared::{Inputs, run_day_with_args};
 
 fn main() {
@@ -80,7 +82,7 @@ fn part2_fold(input: &str) -> u128 {
         sum + (1..=12)
             .rev()
             .fold((0u128, 0usize), |(line_sum, idx), limit| {
-                let (max, pos) = find_leftmost_max_digit_fold(line, idx, limit);
+                let (max, pos) = find_leftmost_max_digit_fold_while(line, idx, limit);
                 (
                     line_sum + max as u128 * 10_u128.pow(limit as u32 - 1),
                     pos + 1,
@@ -103,6 +105,25 @@ fn find_leftmost_max_digit_fold(line: &str, start_idx: usize, limit: usize) -> (
             }
         },
     )
+}
+
+fn find_leftmost_max_digit_fold_while(line: &str, start_idx: usize, limit: usize) -> (u32, usize) {
+    line[start_idx..=line.len() - limit].char_indices().fold_while(
+        (0, 0),
+        |(max, max_pos), (pos, char)| {
+            if max == 9 {
+                Done((max, pos))
+            } else {
+                if let Some(c) = char.to_digit(10)
+                    && c > max
+                {
+                    Continue((c, pos + start_idx))
+                } else {
+                    Continue((max, max_pos))
+                }
+            }
+        },
+    ).into_inner()
 }
 
 fn find_leftmost_max_digit(line: &str, limit: usize) -> ((u32, usize), &str) {
