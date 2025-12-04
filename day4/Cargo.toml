@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 shared = {path = "../shared"}
 itertools.workspace = true
+grid.workspace = true
