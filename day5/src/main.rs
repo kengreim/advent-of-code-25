@@ -1,5 +1,6 @@
 use shared::{Inputs, run_day_with_args};
 use std::collections::VecDeque;
+use std::fmt::Debug;
 
 fn main() {
     run_day_with_args(
@@ -40,25 +41,7 @@ fn part2(input: &str) -> i64 {
     final_ranges.iter().map(|r| r.end - r.start + 1).sum()
 }
 
-type Number = i64;
-#[derive(Debug, Copy, Clone)]
-struct Range {
-    start: Number,
-    end: Number,
-}
-
-impl Range {
-    fn combine_with_range(&mut self, other: Range) {
-        if other.start < self.start {
-            self.start = other.start;
-        }
-        if other.end > self.end {
-            self.end = other.end;
-        }
-    }
-}
-
-fn parse_input(input: &str) -> (Vec<Range>, Vec<Number>) {
+fn parse_input(input: &str) -> (Vec<Range<Number>>, Vec<Number>) {
     let mut ranges = Vec::new();
     let mut ingredients = Vec::new();
     let mut reading_ranges = true;
@@ -71,18 +54,18 @@ fn parse_input(input: &str) -> (Vec<Range>, Vec<Number>) {
         if reading_ranges {
             let (start, end) = line.split_once('-').unwrap();
             ranges.push(Range {
-                start: start.parse::<i64>().unwrap(),
-                end: end.parse::<i64>().unwrap(),
+                start: start.parse::<Number>().unwrap(),
+                end: end.parse::<Number>().unwrap(),
             });
         } else {
-            ingredients.push(line.parse::<i64>().unwrap());
+            ingredients.push(line.parse::<Number>().unwrap());
         }
     }
 
     (ranges, ingredients)
 }
 
-fn make_final_ranges(mut ranges: Vec<Range>) -> Vec<Range> {
+fn make_final_ranges(mut ranges: Vec<Range<Number>>) -> Vec<Range<Number>> {
     ranges.sort_unstable_by(|a, b| a.start.cmp(&b.start));
 
     let mut ranges_stack = VecDeque::from(ranges);
@@ -103,4 +86,28 @@ fn make_final_ranges(mut ranges: Vec<Range>) -> Vec<Range> {
     }
 
     final_ranges
+}
+
+type Number = i64;
+#[derive(Debug, Copy, Clone)]
+struct Range<T>
+where
+    T: Debug,
+{
+    start: T,
+    end: T,
+}
+
+impl<T> Range<T>
+where
+    T: Ord + Debug,
+{
+    fn combine_with_range(&mut self, other: Range<T>) {
+        if other.start < self.start {
+            self.start = other.start;
+        }
+        if other.end > self.end {
+            self.end = other.end;
+        }
+    }
 }
