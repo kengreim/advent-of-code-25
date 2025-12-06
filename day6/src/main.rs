@@ -41,7 +41,6 @@ fn part2(input: &str) -> Number {
             }
             new_vals.push(col_val.trim().parse::<Number>().unwrap());
         }
-        //println!("{:?}", new_vals);
 
         match operator {
             Add => sum += new_vals.iter().sum::<Number>(),
@@ -50,37 +49,6 @@ fn part2(input: &str) -> Number {
     }
 
     sum
-
-    // let problems = parse_input(input);
-    // problems.iter().fold(0, |acc, (vals, operator)| {
-    //     let max_length = vals.iter().map(|val| val.to_string().len()).max().unwrap();
-    //     let mut new_vals = Vec::new();
-    //     for right_idx in 0..max_length {
-    //         //let mut sum = 0;
-    //         let mut digits = Vec::new();
-    //         for (row, val) in vals.iter().enumerate() {
-    //             if let Some(idx) = (val.to_string().len() - 1).checked_sub(right_idx) {
-    //                 // sum += (10 as Number).pow((vals.len() - row - 1) as u32)
-    //                 //     * ((val / (10 as Number).pow(right_idx as u32)) % 10);
-    //                 digits.push(val / (10 as Number).pow(right_idx as u32) % 10);
-    //             }
-    //         }
-    //         let sum = digits
-    //             .iter()
-    //             .rev()
-    //             .enumerate()
-    //             .map(|(n, digit)| digit * (10 as Number).pow(n as u32))
-    //             .sum::<Number>();
-    //         new_vals.push(sum);
-    //     }
-    //     println!("{:?}", vals);
-    //     println!("{:?}", new_vals);
-    //
-    //     acc + match operator {
-    //         Add => new_vals.iter().sum::<Number>(),
-    //         Multiply => new_vals.iter().product::<Number>(),
-    //     }
-    // })
 }
 
 fn parse_input(input: &str) -> Vec<(Vec<Number>, Operator)> {
@@ -169,7 +137,6 @@ fn parse_input_2(input: &str) -> Vec<(Vec<Vec<char>>, Operator)> {
         }
         current_col = separator_col + 1;
     }
-
-    //println!("{:?}", parsed);
+    
     parsed
 }
