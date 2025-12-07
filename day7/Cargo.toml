@@ -1,0 +1,9 @@
+[package]
+name = "day7"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+shared = { path = "../shared" }
+grid.workspace = true
+petgraph.workspace = true
