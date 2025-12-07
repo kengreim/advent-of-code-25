@@ -4,6 +4,7 @@ use petgraph::graph::DiGraph;
 use petgraph::prelude::NodeIndex;
 use shared::{Inputs, run_day_with_args};
 use std::collections::{HashMap, HashSet, VecDeque};
+use std::time::Instant;
 
 type Number = i64;
 
@@ -51,8 +52,12 @@ fn part1(input: &str) -> usize {
 }
 
 fn part2(input: &str) -> usize {
+    let now = Instant::now();
     let grid = parse_input(input);
     let mut grid = fill_grid_with_beams(grid);
+    println!("Parse: {:?}", now.elapsed());
+
+    let now = Instant::now();
     let mut graph = DiGraph::new();
     let mut all_nodes: HashMap<(usize, usize), NodeIndex> = HashMap::new();
     let mut start_node = None;
@@ -98,9 +103,11 @@ fn part2(input: &str) -> usize {
             }
         }
     }
+    println!("DAG: {:?}", now.elapsed());
 
     // Build memoized counts from the start to the end where the count of a node is the sum
     // of the counts of incoming neighbors
+    let now = Instant::now();
     let mut counts: HashMap<NodeIndex, usize> = HashMap::new();
     let mut node_queue = VecDeque::from(vec![start_node.unwrap()]);
     while let Some(node) = node_queue.pop_front() {
@@ -130,6 +137,7 @@ fn part2(input: &str) -> usize {
         }
     });
 
+    println!("Final counts: {:?}", now.elapsed());
     final_nodes.map(|n| counts[n]).sum()
 }
 
