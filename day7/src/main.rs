@@ -6,8 +6,6 @@ use shared::{Inputs, run_day_with_args};
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::time::Instant;
 
-type Number = i64;
-
 fn main() {
     run_day_with_args(
         part1,
@@ -80,25 +78,24 @@ fn part2(input: &str) -> usize {
             if grid.get(row, col).unwrap() == &'|' {
                 let new_node = graph.add_node((row, col));
                 all_nodes.insert((row, col), new_node);
-                if col > 0 {
-                    if grid.get(row, col - 1).unwrap() == &'^'
-                        && grid.get(row - 1, col - 1).unwrap() == &'|'
-                    {
-                        let previous_node = all_nodes.get(&(row - 1, col - 1)).unwrap();
-                        graph.add_edge(*previous_node, new_node, 1);
-                    }
+                if col > 0
+                    && grid.get(row, col - 1).unwrap() == &'^'
+                    && grid.get(row - 1, col - 1).unwrap() == &'|'
+                {
+                    let previous_node = all_nodes.get(&(row - 1, col - 1)).unwrap();
+                    graph.add_edge(*previous_node, new_node, 1);
                 }
+
                 if grid.get(row - 1, col).unwrap() == &'|' {
                     let previous_node = all_nodes.get(&(row - 1, col)).unwrap();
                     graph.add_edge(*previous_node, new_node, 1);
                 }
-                if col < grid.cols() - 1 {
-                    if grid.get(row, col + 1).unwrap() == &'^'
-                        && grid.get(row - 1, col + 1).unwrap() == &'|'
-                    {
-                        let previous_node = all_nodes.get(&(row - 1, col + 1)).unwrap();
-                        graph.add_edge(*previous_node, new_node, 1);
-                    }
+                if col < grid.cols() - 1
+                    && grid.get(row, col + 1).unwrap() == &'^'
+                    && grid.get(row - 1, col + 1).unwrap() == &'|'
+                {
+                    let previous_node = all_nodes.get(&(row - 1, col + 1)).unwrap();
+                    graph.add_edge(*previous_node, new_node, 1);
                 }
             }
         }
@@ -111,7 +108,7 @@ fn part2(input: &str) -> usize {
     let mut counts: HashMap<NodeIndex, usize> = HashMap::new();
     let mut node_queue = VecDeque::from(vec![start_node.unwrap()]);
     while let Some(node) = node_queue.pop_front() {
-        if let Some(_) = counts.get_mut(&node) {
+        if counts.contains_key(&node) {
             // We visited already
             continue;
         }
@@ -129,7 +126,7 @@ fn part2(input: &str) -> usize {
         node_queue.extend(graph.neighbors_directed(node, Direction::Outgoing));
     }
 
-    let final_nodes = all_nodes.iter().filter_map(|((row, col), idx)| {
+    let final_nodes = all_nodes.iter().filter_map(|((row, _), idx)| {
         if *row == grid.rows() - 1 {
             Some(idx)
         } else {
