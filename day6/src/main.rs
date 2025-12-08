@@ -137,6 +137,6 @@ fn parse_input_2(input: &str) -> Vec<(Vec<Vec<char>>, Operator)> {
         }
         current_col = separator_col + 1;
     }
-    
+
     parsed
 }
