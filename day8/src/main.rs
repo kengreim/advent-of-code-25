@@ -46,7 +46,7 @@ fn part1(input: &str) -> usize {
 
     // Find SCCs and get the biggest
     let mut components = algo::kosaraju_scc(&graph);
-    components.sort_unstable_by_key(|v| usize::MAX - v.len());
+    components.sort_unstable_by_key(|v| usize::MAX - v.len()); // We want biggest first
     components.iter().take(3).map(|c| c.len()).product()
 }
 
@@ -98,16 +98,15 @@ struct Point {
 }
 
 fn parse_input(input: &str) -> Vec<Point> {
-    let mut boxes = Vec::new();
-    for line in input.lines() {
-        let nums = line.split(',').collect::<Vec<_>>();
-        boxes.push(Point {
+    input
+        .lines()
+        .map(|l| l.split(',').take(3).collect::<Vec<_>>())
+        .map(|nums| Point {
             x: nums[0].parse::<Number>().unwrap(),
             y: nums[1].parse::<Number>().unwrap(),
             z: nums[2].parse::<Number>().unwrap(),
-        });
-    }
-    boxes
+        })
+        .collect::<Vec<_>>()
 }
 
 fn distance(point1: &Point, point2: &Point) -> f64 {
